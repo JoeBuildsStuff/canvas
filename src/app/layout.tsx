@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Providers } from "@/components/providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,8 +18,6 @@ export const metadata: Metadata = {
   description: "A canvas for creating diagrams and flowcharts",
 };
 
-import { Toaster } from "@/components/ui/sonner"
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,10 +28,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <main className="h-screen w-screen">
-        {children}
-        </main>
-        <Toaster richColors closeButton position="top-center" />
+        <Providers>
+          <main className="h-screen w-screen">
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );

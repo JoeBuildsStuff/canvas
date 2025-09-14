@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, ChangeEvent } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, Presentation, PencilRuler, HelpCircle, Grip, Download, FileJson, Clipboard, Check, ArrowBigUpDash, FileUp, AlertTriangle, BookOpen, Copy } from 'lucide-react';
+import { Menu, Presentation, PencilRuler, HelpCircle, Grip, Download, FileJson, Clipboard, Check, ArrowBigUpDash, FileUp, AlertTriangle, BookOpen, Copy, Moon, Sun } from 'lucide-react';
 import { Node, Connection, useCanvasStore } from '../../lib/store/canvas-store';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { motion } from 'motion/react';
@@ -36,6 +36,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import ReactMarkdown from 'react-markdown';
+import { useTheme } from 'next-themes';
 
 interface TopMenuControlsProps {
   position: 'left' | 'right';
@@ -64,7 +65,8 @@ const TopMenuControls = ({ position, presentationModeOnly = false }: TopMenuCont
   const [instructionsCopied, setInstructionsCopied] = useState(false);
   
   const { presentationMode, togglePresentationMode } = useCanvasStore();
-
+  const { resolvedTheme, setTheme } = useTheme();
+  
   const handleTogglePresentationMode = () => {
     togglePresentationMode();
   };
@@ -572,7 +574,7 @@ Here's a simplified example of a complete import JSON with different types of no
         <DropdownMenu> 
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon">
-              <Menu className="h-4 w-4" />
+              <Menu className="size-4" />
               <span className="sr-only">Canvas Controls</span>
             </Button>
           </DropdownMenuTrigger>
@@ -583,7 +585,7 @@ Here's a simplified example of a complete import JSON with different types of no
             {/* Grid Settings Submenu */}
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
-                <Grip className="mr-2 h-4 w-4" />
+                <Grip className="size-4 mr-2" />
                 <span>Grid Settings (⌘G)</span>
               </DropdownMenuSubTrigger>
               <DropdownMenuPortal>
@@ -652,25 +654,25 @@ Here's a simplified example of a complete import JSON with different types of no
             {/* Export Submenu */}
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
-                <Download className="mr-2 h-4 w-4" />
+                <Download className="size-4 mr-2" />
                 <span>Export Canvas</span>
               </DropdownMenuSubTrigger>
               <DropdownMenuPortal>
                 <DropdownMenuSubContent>
                   <DropdownMenuItem onClick={exportAsJson}>
-                    <Download className="mr-2 h-4 w-4" />
+                    <Download className="size-4" />
                     <span>Save as JSON</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={copyToClipboard}>
                     {copied ? (
-                      <Check className="mr-2 h-4 w-4 text-green-500" />
+                      <Check className="size-4 text-green-500" />
                     ) : (
-                      <Clipboard className="mr-2 h-4 w-4" />
+                      <Clipboard className="size-4" />
                     )}
                     <span>{copied ? "Copied!" : "Copy to Clipboard"}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={viewJson}>
-                    <FileJson className="mr-2 h-4 w-4" />
+                    <FileJson className="size-4" />
                     <span>View JSON</span>
                   </DropdownMenuItem>
                 </DropdownMenuSubContent>
@@ -679,14 +681,30 @@ Here's a simplified example of a complete import JSON with different types of no
             
             {/* Import Dialog Trigger */}
             <DropdownMenuItem onClick={() => setIsImportDialogOpen(true)}>
-              <ArrowBigUpDash className="mr-2 h-4 w-4" />
+              <ArrowBigUpDash className="size-4" />
               <span>Import Canvas</span>
             </DropdownMenuItem>
             
             {/* Instructions Dialog Trigger */}
             <DropdownMenuItem onClick={() => setIsInstructionsOpen(true)}>
-              <BookOpen className="mr-2 h-4 w-4" />
+              <BookOpen className="size-4" />
               <span>LLM Instructions</span>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
+              {resolvedTheme === "dark" ? (
+                <>
+                  <Sun className="size-4" strokeWidth={1.5}/>
+                  <span>Toggle Light Mode</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="size-4" strokeWidth={1.5}/>
+                  <span>Toggle Dark Mode</span>
+                </>
+              )}
+              <span className="sr-only">Toggle Theme</span>
+          
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
