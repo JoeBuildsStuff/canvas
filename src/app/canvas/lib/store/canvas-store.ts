@@ -1,13 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { ConnectionPointPosition, isElbowLine, adjustElbowMiddlePoint, generateElbowConnector } from '@/app/canvas/lib/connection';
-import { 
-  deepClone,
-  calculateLineBoundingBox,
-  LINE_BOUNDING_BOX_PADDING,
-  findNearestConnectionPoint,
-  updateAllLineConnections
-} from '../utils/connection-utils';
+import { deepClone, calculateBoundingBox, LINE_BOUNDING_BOX_PADDING, connectionManager } from '@/app/canvas/lib/connection';
 // Import the elbow line utilities
 // Old elbow utilities removed in favor of centralized connection system
 // Always import the node registry to start with default node types and styles
@@ -1308,9 +1302,7 @@ export const useCanvasStore = create<CanvasState>()(
               const lineCopy = deepClone(lineNode);
               
               // Update the line based on its type
-              const updatedLine = isElbowLine(lineNode)
-                ? updateLineWithElbowRouting(lineCopy, state.connections, state.nodes)
-                : updateAllLineConnections(lineCopy, state.connections, state.nodes);
+              const updatedLine = connectionManager.updateAllLineConnections(lineCopy, state.connections, state.nodes);
               
               // Update the line in the nodes array
               state.nodes[lineIndex] = updatedLine;
@@ -1340,7 +1332,7 @@ export const useCanvasStore = create<CanvasState>()(
           resizeLineNode(node, direction, dx, dy, state.snapToGrid, state.gridSize);
           
           // Update all connections for this line
-          const updatedNode = updateAllLineConnections(node, state.connections, state.nodes);
+          const updatedNode = connectionManager.updateAllLineConnections(node, state.connections, state.nodes);
           
           // Update the node with the updated values
           node.points = updatedNode.points;
@@ -1385,7 +1377,7 @@ export const useCanvasStore = create<CanvasState>()(
               const line = state.nodes[lineIndex];
               
               // Use the utility function to update all connections for this line
-              const updatedLine = updateAllLineConnections(line, state.connections, state.nodes);
+              const updatedLine = connectionManager.updateAllLineConnections(line, state.connections, state.nodes);
               
               // Update the line with the updated values
               state.nodes[lineIndex] = updatedLine;
@@ -1885,7 +1877,7 @@ export const useCanvasStore = create<CanvasState>()(
           line.points[line.points.length - 1] = { x: snappedX, y: snappedY };
           
           // Use the utility function to calculate the bounding box
-          const boundingBox = calculateLineBoundingBox(line.points);
+      const boundingBox = calculateBoundingBox(line.points, LINE_BOUNDING_BOX_PADDING);
           
           // Update dimensions
           line.dimensions = boundingBox.dimensions;
@@ -2018,14 +2010,11 @@ export const useCanvasStore = create<CanvasState>()(
         const endMarker = nodeData.endMarker as MarkerShape || 'none';
         
         // Check if we should snap to a connection point on another node
-        const nearestConnectionPoint = findNearestConnectionPoint(
+        const nearestConnectionPoint = connectionManager.findNearestConnectionPoint(
           state.nodes,
-          x, 
-          y, 
+          { x, y },
           nodeId, // Exclude the current line node
-          startOrEnd,
-          startMarker,
-          endMarker
+          { isConnected: true, startOrEnd, startMarker, endMarker }
         );
         
         let finalX = x;
@@ -2081,7 +2070,7 @@ export const useCanvasStore = create<CanvasState>()(
         }
         
         // Use the utility function to calculate the bounding box
-        const boundingBox = calculateLineBoundingBox(node.points);
+        const boundingBox = calculateBoundingBox(node.points, LINE_BOUNDING_BOX_PADDING);
         
         // Update dimensions
         node.dimensions = boundingBox.dimensions;
@@ -2118,14 +2107,11 @@ export const useCanvasStore = create<CanvasState>()(
         const endMarker = nodeData.endMarker as MarkerShape || 'none';
         
         // Check if we should snap to a connection point on another node
-        const nearestConnectionPoint = findNearestConnectionPoint(
+        const nearestConnectionPoint = connectionManager.findNearestConnectionPoint(
           state.nodes,
-          x, 
-          y, 
+          { x, y },
           nodeId, // Exclude the current line node
-          undefined, // Middle points don't have a start/end designation
-          startMarker,
-          endMarker
+          { isConnected: true, startOrEnd: undefined, startMarker, endMarker }
         );
         
         let finalX = x;
@@ -2167,7 +2153,7 @@ export const useCanvasStore = create<CanvasState>()(
         }
         
         // Use the utility function to calculate the bounding box
-        const boundingBox = calculateLineBoundingBox(node.points);
+        const boundingBox = calculateBoundingBox(node.points, LINE_BOUNDING_BOX_PADDING);
         
         // Update dimensions
         node.dimensions = boundingBox.dimensions;
@@ -2508,7 +2494,7 @@ export const useCanvasStore = create<CanvasState>()(
 
               if (lineConnections.length > 0) {
                 // If there are connections, use centralized manager to update all connections (elbow-aware)
-                updatedNodes[index] = updateAllLineConnections(updatedNodes[index], state.connections, state.nodes);
+                updatedNodes[index] = connectionManager.updateAllLineConnections(updatedNodes[index], state.connections, state.nodes);
               } else {
                 // If no connections, just use simple elbow points
                 const startPoint = updatedNodes[index].points![0];
