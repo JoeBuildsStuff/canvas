@@ -1,7 +1,7 @@
 import React from 'react';
 import { Node, MarkerShape, FillStyle } from '../../lib/store/canvas-store';
 import Marker from '../shapes/Marker';
-import { isElbowLine, generateRoundedElbowPathData } from '../../lib/utils/elbow-line-utils';
+import { isElbowLine, generateRoundedElbowPathData } from '@/app/canvas/lib/connection';
 import { useCanvasStore } from '../../lib/store/canvas-store';
 
 interface LineInProgressProps {

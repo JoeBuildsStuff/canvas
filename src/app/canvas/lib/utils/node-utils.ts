@@ -38,6 +38,8 @@
 // ======================================================
 
 import { Node } from '../store/canvas-store';
+// Use centralized geometry utilities
+import { distanceToLineSegment, lineSegmentsIntersect } from '@/app/canvas/lib/connection';
 
 // Find a node at a specific position
 export function findNodeAtPosition(
@@ -185,30 +187,8 @@ export function isNodeInSelectionBox(
   );
 }
 
-// Check if two line segments intersect
-export function lineSegmentsIntersect(
-  x1: number, y1: number, x2: number, y2: number, // First line segment
-  x3: number, y3: number, x4: number, y4: number  // Second line segment
-): boolean {
-  // Calculate the direction of the lines
-  const d1x = x2 - x1;
-  const d1y = y2 - y1;
-  const d2x = x4 - x3;
-  const d2y = y4 - y3;
-  
-  // Calculate the determinant
-  const det = d1x * d2y - d1y * d2x;
-  
-  // If determinant is zero, lines are parallel
-  if (det === 0) return false;
-  
-  // Calculate the parameters for the intersection point
-  const s = ((x1 - x3) * d2y - (y1 - y3) * d2x) / det;
-  const t = ((x1 - x3) * d1y - (y1 - y3) * d1x) / det;
-  
-  // Check if the intersection point is within both line segments
-  return s >= 0 && s <= 1 && t >= 0 && t <= 1;
-}
+// Re-export centralized helpers for any external callers
+export { lineSegmentsIntersect };
 
 // Helper for checking elbow lines
 function isElbowLine(node: Node): boolean {
@@ -260,23 +240,7 @@ export function findClosestLineSegment(
     : null;
 }
 
-// Calculate distance from a point to a line segment
-export function distanceToLineSegment(
-  x: number, y: number,
-  x1: number, y1: number,
-  x2: number, y2: number
-): number {
-  const lengthSquared = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
-  
-  if (lengthSquared === 0) return Math.sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1));
-  
-  const t = Math.max(0, Math.min(1, ((x - x1) * (x2 - x1) + (y - y1) * (y2 - y1)) / lengthSquared));
-  
-  const projectionX = x1 + t * (x2 - x1);
-  const projectionY = y1 + t * (y2 - y1);
-  
-  return Math.sqrt((x - projectionX) * (x - projectionX) + (y - projectionY) * (y - projectionY));
-}
+export { distanceToLineSegment };
 
 export interface AlignmentGuides {
   horizontal: { y: number, start: number, end: number, type?: 'top' | 'bottom' | 'center' }[];

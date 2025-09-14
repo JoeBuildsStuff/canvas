@@ -3,7 +3,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ZoomIn, ZoomOut } from 'lucide-react';
+import { Minus, Plus} from 'lucide-react';
 import { useCanvasStore } from '../../lib/store/canvas-store';
 
 const ZoomControls = () => {
@@ -16,11 +16,11 @@ const ZoomControls = () => {
     <div className="absolute bottom-4 left-4">
       <Card className="flex flex-row items-center bg-background/80 backdrop-blur-sm p-1 gap-0">
         <Button variant="ghost" size="icon" onClick={zoomOut}>
-          <ZoomOut className="w-4 h-4" />
+          <Minus className="size-4 shrink-0" />
         </Button>
         <span className="px-2">{zoomPercentage}%</span>
         <Button variant="ghost" size="icon" onClick={zoomIn}>
-          <ZoomIn className="w-4 h-4" />
+          <Plus className="size-4 shrink-0" />
         </Button>
       </Card>
     </div>

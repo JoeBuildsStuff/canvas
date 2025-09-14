@@ -41,10 +41,8 @@
 
 import { useState, RefObject, useEffect } from 'react';
 import { useCanvasStore, Node, MarkerShape } from '../lib/store/canvas-store';
-import { ConnectionPointPosition } from '../components/ui/ConnectionPoints';
+import { connectionManager, isElbowLine, ConnectionPointPosition } from '@/app/canvas/lib/connection';
 import { findAlignmentGuides, findClosestLineSegment, findNodeAtPosition, isNodeInSelectionBox, getSnappedPosition } from '../lib/utils/node-utils';
-import { isElbowLine } from '../lib/utils/elbow-line-utils';
-import { calculateConnectionPointPosition } from '../lib/utils/connection-utils';
 
 
 export function useCanvasMouse(canvasRef: RefObject<HTMLDivElement | null>) {
@@ -398,14 +396,15 @@ export function useCanvasMouse(canvasRef: RefObject<HTMLDivElement | null>) {
           endMarker = lineData.endMarker as MarkerShape || 'none';
         }
         
-        const connectionPoint = calculateConnectionPointPosition(
-          node, 
-          hoveredConnectionPoint.position, 
-          true, 
-          undefined, 
-          startOrEnd, 
-          startMarker, 
-          endMarker
+        const connectionPoint = connectionManager.calculateConnectionPoint(
+          node,
+          hoveredConnectionPoint.position,
+          {
+            isConnected: true,
+            startOrEnd,
+            startMarker,
+            endMarker
+          }
         );
         
         const distance = Math.sqrt(
@@ -462,14 +461,15 @@ export function useCanvasMouse(canvasRef: RefObject<HTMLDivElement | null>) {
       
       for (const position of connectionPositions) {
         // Calculate the connection point position with marker information
-        const connectionPoint = calculateConnectionPointPosition(
-          node, 
-          position, 
-          true, 
-          undefined, 
-          startOrEnd, 
-          startMarker, 
-          endMarker
+        const connectionPoint = connectionManager.calculateConnectionPoint(
+          node,
+          position,
+          {
+            isConnected: true,
+            startOrEnd,
+            startMarker,
+            endMarker
+          }
         );
         
         // Calculate distance from mouse to connection point
@@ -531,14 +531,16 @@ export function useCanvasMouse(canvasRef: RefObject<HTMLDivElement | null>) {
     const endMarker = lineNode.data?.endMarker as MarkerShape || 'none';
 
     // Calculate the exact connection point position, passing marker information directly
-    const connectionPoint = calculateConnectionPointPosition(
-      node, 
-      position, 
-      true, 
-      lineNode, 
-      startOrEnd,
-      startMarker,
-      endMarker
+    const connectionPoint = connectionManager.calculateConnectionPoint(
+      node,
+      position,
+      {
+        isConnected: true,
+        lineNode,
+        startOrEnd,
+        startMarker,
+        endMarker
+      }
     );
     
     // Create the connection in the store
@@ -713,9 +715,12 @@ export function useCanvasMouse(canvasRef: RefObject<HTMLDivElement | null>) {
           const node = displayNodes?.find(n => n.id === nodeId);
           
           if (node) {
-            // calculateConnectionPointPosition will return a position and consider if a marker is present to adjust
-            // for an offset to accomodate the marker.
-            const connectionPoint = calculateConnectionPointPosition(node, position, true, lineInProgress || undefined, 'end');
+            // Calculate with marker-aware offset using centralized manager
+            const connectionPoint = connectionManager.calculateConnectionPoint(
+              node,
+              position,
+              { isConnected: true, lineNode: lineInProgress || undefined, startOrEnd: 'end' }
+            );
             // Pass false for isShiftPressed to ensure we don't apply angle constraints
             updateLineDraw(connectionPoint.x, connectionPoint.y, false);
           }
@@ -936,14 +941,10 @@ export function useCanvasMouse(canvasRef: RefObject<HTMLDivElement | null>) {
             finishLineDraw();
           } else {
             // Start a new line from this connection point - use startMarker and endMarker from the store state
-            const connectionPoint = calculateConnectionPointPosition(
-              node, 
-              position, 
-              true, 
-              undefined, 
-              'start', 
-              startMarker,
-              endMarker
+            const connectionPoint = connectionManager.calculateConnectionPoint(
+              node,
+              position,
+              { isConnected: true, startOrEnd: 'start', startMarker, endMarker }
             );
           
             startLineDraw(connectionPoint.x, connectionPoint.y, activeTool as 'line' | 'arrow');

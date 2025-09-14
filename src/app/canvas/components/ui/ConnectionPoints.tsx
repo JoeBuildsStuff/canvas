@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import { LazyMotion, domAnimation, m } from "motion/react";
 import { Node } from '../../lib/store/canvas-store';
-import { calculateConnectionPointPosition } from '../../lib/utils/connection-utils';
+import { connectionManager } from '@/app/canvas/lib/connection';
 
 export type ConnectionPointPosition = 
   | 'n' | 's' | 'e' | 'w'  // Cardinal directions
@@ -66,7 +66,7 @@ const ConnectionPoints: React.FC<ConnectionPointsProps> = ({
     
     // Calculate the absolute position for each connection point
     const points = positions.reduce((acc, position) => {
-      const absolutePos = calculateConnectionPointPosition(node, position as ConnectionPointPosition, false);
+      const absolutePos = connectionManager.calculateConnectionPoint(node, position as ConnectionPointPosition, {});
       
       // Convert to relative position within the container
       const relativeX = absolutePos.x - node.position.x;
