@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { ChevronRight, ChevronDown, ChevronUp, ChevronLeft } from 'lucide-react';
 import { LazyMotion, domAnimation, m } from "motion/react";
 import { Node, useCanvasStore } from '../../lib/store/canvas-store';
-import { calculateConnectionPointPosition } from '../../lib/utils/connection-utils';
+import { connectionManager } from '@/app/canvas/lib/connection';
 import { nodeRegistry } from '../../components/NodeRegistry';
 
 interface DuplicateButtonProps {
@@ -185,8 +185,8 @@ const DuplicateButton: React.FC<DuplicateButtonProps> = ({ node }) => {
     // Calculate connection points
     // Currently defaulting duplicate line to not include start or end markers
     // TODO: Make this configurable, let user choose if they want markers or not from the sidecontrols lineendpointcontrols.tsx
-    const sourcePoint = calculateConnectionPointPosition(sourceNode, config.sourcePosition, true, undefined, 'start');
-    const targetPoint = calculateConnectionPointPosition(targetNode, config.targetPosition, true, undefined, 'end');
+    const sourcePoint = connectionManager.calculateConnectionPoint(sourceNode, config.sourcePosition, { isConnected: true, startOrEnd: 'start' });
+    const targetPoint = connectionManager.calculateConnectionPoint(targetNode, config.targetPosition, { isConnected: true, startOrEnd: 'end' });
 
     // Create the line node using NodeRegistry with default settings
     const baseNode = nodeRegistry.createNode('line', { x: sourcePoint.x, y: sourcePoint.y }, lineId);

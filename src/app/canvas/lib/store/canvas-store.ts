@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import { ConnectionPointPosition } from '../../components/ui/ConnectionPoints';
+import { ConnectionPointPosition, isElbowLine, adjustElbowMiddlePoint, generateElbowConnector } from '@/app/canvas/lib/connection';
 import { 
   deepClone,
   calculateLineBoundingBox,
@@ -9,12 +9,7 @@ import {
   updateAllLineConnections
 } from '../utils/connection-utils';
 // Import the elbow line utilities
-import {
-  generateElbowPoints,
-  isElbowLine,
-  handleElbowEndpointDrag,
-  updateLineWithElbowRouting
-} from '../utils/elbow-line-utils';
+// Old elbow utilities removed in favor of centralized connection system
 // Always import the node registry to start with default node types and styles
 import { nodeRegistry } from '../../components/NodeRegistry';
 
@@ -2081,10 +2076,8 @@ export const useCanvasStore = create<CanvasState>()(
         const isEndpoint = pointIndex === 0 || pointIndex === node.points.length - 1;
         
         if (isElbowLineNode && isEndpoint && node.points.length === 3) {
-          // Use the utility function to adjust the middle point
-          const newPoint = { x: relativeX, y: relativeY };
-          const updatedPoints = handleElbowEndpointDrag(node, pointIndex, newPoint);
-          node.points = updatedPoints;
+          // Adjust middle point to maintain L-shape after moving an endpoint
+          node.points = adjustElbowMiddlePoint([...node.points], pointIndex);
         }
         
         // Use the utility function to calculate the bounding box
@@ -2514,13 +2507,13 @@ export const useCanvasStore = create<CanvasState>()(
               const lineConnections = state.connections.filter(conn => conn.lineId === line.id);
 
               if (lineConnections.length > 0) {
-                // If there are connections, use updateLineWithElbowRouting to properly set up the elbow
-              updatedNodes[index] = updateLineWithElbowRouting(updatedNodes[index], state.connections, state.nodes);
+                // If there are connections, use centralized manager to update all connections (elbow-aware)
+                updatedNodes[index] = updateAllLineConnections(updatedNodes[index], state.connections, state.nodes);
               } else {
                 // If no connections, just use simple elbow points
                 const startPoint = updatedNodes[index].points![0];
                 const endPoint = updatedNodes[index].points![updatedNodes[index].points!.length - 1];
-                updatedNodes[index].points = generateElbowPoints(startPoint, endPoint);
+                updatedNodes[index].points = generateElbowConnector(startPoint, endPoint);
               }
             }
           }

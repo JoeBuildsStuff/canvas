@@ -15,7 +15,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useCanvasStore, MarkerShape, FillStyle } from '../../lib/store/canvas-store';
-import { updateAllLineConnections } from '../../lib/utils/connection-utils';
+import { connectionManager } from '@/app/canvas/lib/connection';
 import { useTailwindColors } from '../../lib/utils/use-tailwind-colors';
 import { Switch } from '@/components/ui/switch';
 
@@ -324,7 +324,7 @@ const LineEndpointControls: React.FC<LineEndpointProps> = ({
         const lineNode = allNodes.find(n => n.id === lineId);
         if (lineNode) {
           // Use the imported utility function to update connections
-          const updatedLine = updateAllLineConnections(lineNode, connections, allNodes);
+          const updatedLine = connectionManager.updateAllLineConnections(lineNode, connections, allNodes);
           
           // Update the node in the store
           useCanvasStore.getState().updateNodePosition(

@@ -10,7 +10,7 @@ import AlignmentControls from '../../components/ui/AlignmentControls';
 import { useCanvasStore } from '../../lib/store/canvas-store';
 import TextControls from '../../components/ui/TextControls';
 import LineConnectorControls from '../../components/ui/LineEndpointControls';
-import { isElbowLine } from '../../lib/utils/elbow-line-utils';
+import { isElbowLine } from '@/app/canvas/lib/connection';
 
 const SideControls = () => {
   // Get nodes from the canvas store

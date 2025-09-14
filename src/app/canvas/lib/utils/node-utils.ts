@@ -38,8 +38,8 @@
 // ======================================================
 
 import { Node } from '../store/canvas-store';
-// Use centralized geometry utilities
-import { distanceToLineSegment, lineSegmentsIntersect } from '@/app/canvas/lib/connection';
+// Use centralized geometry and routing utilities
+import { distanceToLineSegment, lineSegmentsIntersect, isElbowLine } from '@/app/canvas/lib/connection';
 
 // Find a node at a specific position
 export function findNodeAtPosition(
@@ -190,10 +190,7 @@ export function isNodeInSelectionBox(
 // Re-export centralized helpers for any external callers
 export { lineSegmentsIntersect };
 
-// Helper for checking elbow lines
-function isElbowLine(node: Node): boolean {
-  return node.data?.isElbowLine === true;
-}
+// Use centralized isElbowLine from connection utils
 
 // Find the closest line segment to the given point
 export function findClosestLineSegment(

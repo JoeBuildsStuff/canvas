@@ -3,10 +3,9 @@
 import React, { useMemo } from 'react';
 import { LazyMotion, domAnimation, m } from "motion/react";
 import { Node } from '../../lib/store/canvas-store';
-import { connectionManager } from '@/app/canvas/lib/connection';
+import { connectionManager, ConnectionPointPosition } from '@/app/canvas/lib/connection';
 
-export type ConnectionPointPosition = 
-  | 'n' | 's' | 'e' | 'w'  // Cardinal directions
+// Use centralized type from connection system
 
 interface ConnectionPointsProps {
   node: Node;
