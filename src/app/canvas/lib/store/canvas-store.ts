@@ -66,7 +66,7 @@ export interface Connection {
   pointIndex: number;
   shapeId: string;
   position: ConnectionPointPosition;
-  dynamic?: boolean; // Whether to dynamically recalculate the optimal connection point
+  dynamic: boolean; // Whether to dynamically recalculate the optimal connection point
 }
 
 // Add line type to the CanvasState interface

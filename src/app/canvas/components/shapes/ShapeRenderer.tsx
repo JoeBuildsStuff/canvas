@@ -1,7 +1,8 @@
 import React from 'react';
 import { Node } from '../../lib/store/canvas-store';
 import ResizeHandles, { ResizeHandleDirection } from '../ui/ResizeHandles';
-import ConnectionPoints, { ConnectionPointPosition } from '../ui/ConnectionPoints';
+import ConnectionPoints from '../ui/ConnectionPoints';
+import { ConnectionPointPosition } from '@/app/canvas/lib/connection';
 import LineShape from './LineShape';
 import LineResizeHandles from '../ui/LineResizeHandles';
 import TextShape from './TextShape';
