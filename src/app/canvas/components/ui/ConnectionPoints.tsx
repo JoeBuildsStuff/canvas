@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import { LazyMotion, domAnimation, m } from "motion/react";
 import { Node } from '../../lib/store/canvas-store';
-import { connectionManager, ConnectionPointPosition } from '@/app/canvas/lib/connection';
+import { connectionManager, ConnectionPointPosition } from './../../lib/connection';
 
 // Use centralized type from connection system
 

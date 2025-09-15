@@ -39,7 +39,7 @@
 
 import { Node } from '../store/canvas-store';
 // Use centralized geometry and routing utilities
-import { distanceToLineSegment, lineSegmentsIntersect, isElbowLine } from '@/app/canvas/lib/connection';
+import { distanceToLineSegment, lineSegmentsIntersect, isElbowLine } from './../../lib/connection';
 
 // Find a node at a specific position
 export function findNodeAtPosition(

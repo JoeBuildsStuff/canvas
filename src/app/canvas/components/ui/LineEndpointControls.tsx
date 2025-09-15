@@ -15,7 +15,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useCanvasStore, MarkerShape, FillStyle } from '../../lib/store/canvas-store';
-import { connectionManager } from '@/app/canvas/lib/connection';
+import { connectionManager } from './../../lib/connection';
 import { useTailwindColors } from '../../lib/utils/use-tailwind-colors';
 import { Switch } from '@/components/ui/switch';
 

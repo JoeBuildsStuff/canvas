@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import { ConnectionPointPosition, isElbowLine, adjustElbowMiddlePoint, generateElbowConnector } from '@/app/canvas/lib/connection';
-import { deepClone, calculateBoundingBox, LINE_BOUNDING_BOX_PADDING, connectionManager } from '@/app/canvas/lib/connection';
+import { ConnectionPointPosition, isElbowLine, adjustElbowMiddlePoint, generateElbowConnector } from './../../lib/connection';
+import { deepClone, calculateBoundingBox, LINE_BOUNDING_BOX_PADDING, connectionManager } from './../../lib/connection';
 // Import the elbow line utilities
 // Old elbow utilities removed in favor of centralized connection system
 // Always import the node registry to start with default node types and styles

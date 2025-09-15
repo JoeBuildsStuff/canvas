@@ -42,7 +42,7 @@ import SelectionBox from './selection/SelectionBox';
 import CanvasGrid from './grid/CanvasGrid';
 import LineInProgress from './line-drawing/LineInProgress';
 import { ResizeHandleDirection } from './ui/ResizeHandles';
-import { deepClone } from '@/app/canvas/lib/connection';
+import { deepClone } from './../lib/connection';
 import AlignmentGuide from './alignment/AlignmentGuide';
 import IconSheet from './ui/IconSheet';
 import ExamplesSheet from './ui/ExamplesSheet';

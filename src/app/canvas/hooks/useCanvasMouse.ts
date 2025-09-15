@@ -41,7 +41,7 @@
 
 import { useState, RefObject, useEffect } from 'react';
 import { useCanvasStore, Node, MarkerShape } from '../lib/store/canvas-store';
-import { connectionManager, isElbowLine, ConnectionPointPosition } from '@/app/canvas/lib/connection';
+import { connectionManager, isElbowLine, ConnectionPointPosition } from './../lib/connection';
 import { findAlignmentGuides, findClosestLineSegment, findNodeAtPosition, isNodeInSelectionBox, getSnappedPosition } from '../lib/utils/node-utils';
 
 

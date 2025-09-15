@@ -1,7 +1,7 @@
 import React from 'react';
 import { Node, MarkerShape, FillStyle } from '../../lib/store/canvas-store';
 import Marker from './Marker';
-import { adjustElbowMiddlePoint, isElbowLine, generateRoundedElbowPathData } from '@/app/canvas/lib/connection';
+import { adjustElbowMiddlePoint, isElbowLine, generateRoundedElbowPathData } from './../../lib/connection';
 import { useCanvasStore } from '../../lib/store/canvas-store';
 
 interface LineShapeProps {

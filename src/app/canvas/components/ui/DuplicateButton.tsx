@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { ChevronRight, ChevronDown, ChevronUp, ChevronLeft } from 'lucide-react';
 import { Node, useCanvasStore } from '../../lib/store/canvas-store';
-import { connectionManager } from '@/app/canvas/lib/connection';
+import { connectionManager } from './../../lib/connection';
 import { nodeRegistry } from '../../components/NodeRegistry';
 
 interface DuplicateButtonProps {
