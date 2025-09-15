@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { ChevronRight, ChevronDown, ChevronUp, ChevronLeft } from 'lucide-react';
-import { LazyMotion, domAnimation, m } from "motion/react";
 import { Node, useCanvasStore } from '../../lib/store/canvas-store';
 import { connectionManager } from '@/app/canvas/lib/connection';
 import { nodeRegistry } from '../../components/NodeRegistry';
@@ -15,7 +14,7 @@ interface DuplicateButtonProps {
 type Direction = 'n' | 'e' | 's' | 'w';
 
 // Define the duplicate offset distance
-const DUPLICATE_OFFSET_DISTANCE = 120;
+const DUPLICATE_OFFSET_DISTANCE = 420;
 
 // Define button position constants
 const BUTTON_OFFSET = 35; // Distance from the edge of the shape
@@ -232,7 +231,8 @@ const DuplicateButton: React.FC<DuplicateButtonProps> = ({ node }) => {
       top: position.y,
       zIndex: 1000,
       opacity: hoveredDirection === direction ? 1 : 0,
-      transition: 'opacity 0.2s ease-in-out',
+      transform: `scale(${hoveredDirection === direction ? 1 : 0.9})`,
+      transition: 'opacity 0.2s ease-in-out, transform 0.2s ease-in-out',
       pointerEvents: hoveredDirection === direction ? 'auto' : 'none',
       display: 'flex',
       alignItems: 'center',
@@ -240,6 +240,7 @@ const DuplicateButton: React.FC<DuplicateButtonProps> = ({ node }) => {
       width: '24px',
       height: '24px',
       borderRadius: '50%',
+      border: '1px solid var(--border)',
       backgroundColor: 'var(--background)',
       backdropFilter: 'blur(4px)',
       cursor: 'pointer',
@@ -267,7 +268,7 @@ const DuplicateButton: React.FC<DuplicateButtonProps> = ({ node }) => {
   if (!node.dimensions) return null;
 
   return (
-    <LazyMotion features={domAnimation}>
+    <>
       {/* Render buttons for all four directions */}
       {(Object.keys(directionConfigs) as Direction[]).map(direction => (
         <React.Fragment key={direction}>
@@ -280,32 +281,18 @@ const DuplicateButton: React.FC<DuplicateButtonProps> = ({ node }) => {
           />
           
           {/* Actual button */}
-          <m.div
+          <div
             style={getButtonStyle(direction)}
             onMouseEnter={() => setHoveredDirection(direction)}
             onMouseLeave={() => setHoveredDirection(null)}
             onClick={(e) => handleDuplicate(e, direction)}
-            initial={{ scale: 0.9 }}
-            animate={hoveredDirection === direction ? { 
-              scale: 1,
-              boxShadow: [
-                '0 0 0 0 var(--primary)',
-                '0 0 0 4px transparent',
-                '0 0 0 0 transparent'
-              ]
-            } : { scale: 0.9 }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
             title={`Duplicate shape to the ${direction === 'n' ? 'north' : direction === 'e' ? 'east' : direction === 's' ? 'south' : 'west'}`}
           >
             {directionConfigs[direction].icon}
-          </m.div>
+          </div>
         </React.Fragment>
       ))}
-    </LazyMotion>
+    </>
   );
 };
 
