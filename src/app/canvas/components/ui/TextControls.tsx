@@ -208,7 +208,7 @@ export default function TextControls() {
                   >
                     {color.name === "none" ? (
                       <div className="relative w-4 h-4">
-                        <Square className="h-4 w-4 absolute" style={{ stroke: "hsl(var(--border))", fill: "transparent" }} />
+                        <Square className="h-4 w-4 absolute" style={{ stroke: "var(--border)", fill: "transparent" }} />
                         <Slash className="h-4 w-4 absolute text-muted-foreground" />
                       </div>
                     ) : (
@@ -216,7 +216,7 @@ export default function TextControls() {
                         className="w-4 h-4 rounded-sm" 
                         style={{ 
                           background: `hsl(${color.hsl})`,
-                          border: '1px solid hsl(var(--border))'
+                          border: '1px solid var(--border)'
                         }}
                       />
                     )}
@@ -253,7 +253,7 @@ export default function TextControls() {
                     style={{
                       background: `hsl(${hsl})`,
                       opacity: isDisabled ? 0.5 : 1,
-                      border: '1px solid hsl(var(--border))'
+                      border: '1px solid var(--border)'
                     }}
                   />
                 </ToggleGroupItem>

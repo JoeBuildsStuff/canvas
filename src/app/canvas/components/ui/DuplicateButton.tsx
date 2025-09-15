@@ -240,7 +240,7 @@ const DuplicateButton: React.FC<DuplicateButtonProps> = ({ node }) => {
       width: '24px',
       height: '24px',
       borderRadius: '50%',
-      backgroundColor: 'hsl(var(--background) / 0.8)',
+      backgroundColor: 'var(--background)',
       backdropFilter: 'blur(4px)',
       cursor: 'pointer',
     };
@@ -289,9 +289,9 @@ const DuplicateButton: React.FC<DuplicateButtonProps> = ({ node }) => {
             animate={hoveredDirection === direction ? { 
               scale: 1,
               boxShadow: [
-                '0 0 0 0 hsl(var(--primary) / 0.3)',
-                '0 0 0 4px hsl(var(--primary) / 0)',
-                '0 0 0 0 hsl(var(--primary) / 0)'
+                '0 0 0 0 var(--primary)',
+                '0 0 0 4px transparent',
+                '0 0 0 0 transparent'
               ]
             } : { scale: 0.9 }}
             transition={{

@@ -279,7 +279,7 @@ const TextShape: React.FC<TextShapeProps> = ({ node, isSelected, onTextChange, o
     width: '100%',
     height: '100%',
     boxSizing: 'border-box',
-    color: style?.textColor ? convertTailwindColorToCss(style.textColor as string) : 'hsl(var(--foreground))',
+    color: style?.textColor ? convertTailwindColorToCss(style.textColor as string) : 'var(--foreground)',
     backgroundColor: (style?.backgroundColor as string) || 'transparent',
     fontSize: (style?.fontSize as string) || '14px',
     fontFamily: (style?.fontFamily as string) || 'sans-serif',
@@ -346,7 +346,7 @@ const TextShape: React.FC<TextShapeProps> = ({ node, isSelected, onTextChange, o
     alignSelf: style?.verticalAlign === 'middle' ? 'center' : 
               style?.verticalAlign === 'bottom' ? 'flex-end' : 
               'flex-start',
-    caretColor: 'hsl(var(--primary))', // Blinking cursor color
+    caretColor: 'var(--primary)', // Blinking cursor color
   };
 
   // Render the editing textarea

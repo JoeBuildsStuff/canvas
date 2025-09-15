@@ -172,8 +172,8 @@ const LineShape: React.FC<LineShapeProps> = ({ node, isSelected, selectedEndpoin
         
         // Use styling for endpoints
         const radius = 6;
-        const fillColor = 'hsl(var(--background))';
-        const strokeColor = 'hsl(var(--border))';
+        const fillColor = 'var(--background)';
+        const strokeColor = 'var(--border)';
         const strokeWidth = 1.5;
         
         return (

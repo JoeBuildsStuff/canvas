@@ -66,8 +66,8 @@ const LineResizeHandles: React.FC<LineResizeHandlesProps> = ({ node, onResize })
     position: 'absolute',
     width: `${handleSize}px`,
     height: `${handleSize}px`,
-    backgroundColor: 'hsl(var(--background))',
-    border: '1px solid hsl(var(--border))',
+    backgroundColor: 'var(--background)',
+    border: '1px solid var(--border)',
     borderRadius: '3px',
     zIndex: 100,
     pointerEvents: 'auto',
@@ -93,7 +93,7 @@ const LineResizeHandles: React.FC<LineResizeHandlesProps> = ({ node, onResize })
     left: boundingBox.x,
     width: boundingBox.width,
     height: boundingBox.height,
-    border: '1px solid hsl(var(--border))',
+    border: '1px solid var(--border)',
     pointerEvents: 'none', // Don't interfere with mouse events
     zIndex: 90,
   };

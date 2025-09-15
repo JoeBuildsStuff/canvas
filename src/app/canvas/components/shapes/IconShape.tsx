@@ -41,7 +41,7 @@ const IconShape: React.FC<IconShapeProps> = ({ node }) => {
     }
     
     // Default
-    return 'hsl(var(--foreground))';
+    return 'var(--foreground)';
   };
   
   // Get the stroke width with better handling

@@ -27,7 +27,7 @@ const CanvasGrid: React.FC<CanvasGridProps> = ({
       className="absolute inset-0 pointer-events-none" 
       style={{
         backgroundSize: `${scaledGridSize}px ${scaledGridSize}px`,
-        backgroundImage: 'radial-gradient(circle, hsl(var(--secondary)) 1px, transparent 1px)',
+        backgroundImage: 'radial-gradient(circle, var(--secondary) 1px, transparent 1px)',
         backgroundPosition: `${transform.x % scaledGridSize}px ${transform.y % scaledGridSize}px`,
       }}
     />

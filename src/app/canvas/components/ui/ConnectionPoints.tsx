@@ -26,8 +26,8 @@ const getCommonHandleStyle = (isHovered: boolean): React.CSSProperties => {
     position: 'absolute',
     width: size,
     height: size,
-    backgroundColor: 'hsl(var(--background))',
-    border: '1px solid hsl(var(--border))',
+    backgroundColor: 'var(--background)',
+    border: '1px solid var(--border)',
     borderRadius: '50%', // Make them circular
     zIndex: isHovered ? 1001 : 1000,
     pointerEvents: 'auto',
@@ -140,9 +140,9 @@ const ConnectionPoints: React.FC<ConnectionPointsProps> = ({
               // Only apply animations to hovered points for better performance
               animate={isHovered ? {
                 boxShadow: [
-                  '0 0 0 0 hsl(var(--primary) / 0.7)',    // Primary color with 70% opacity
-                  '0 0 0 12px hsl(var(--primary) / 0)',   // Primary color expanded with 0% opacity
-                  '0 0 0 0 hsl(var(--primary) / 0)'       // Back to no shadow
+                  '0 0 0 0 var(--primary)',    // Primary color
+                  '0 0 0 12px transparent',   // Primary color expanded with 0% opacity
+                  '0 0 0 0 transparent'       // Back to no shadow
                 ]
               } : undefined}
               transition={isHovered ? {

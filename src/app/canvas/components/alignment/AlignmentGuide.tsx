@@ -39,7 +39,7 @@ const AlignmentGuide: React.FC<AlignmentGuideProps> = ({
   if (length < 2) return null;
   
   // Use consistent styling for all guide types
-  const guideColor = 'hsl(var(--border) / 0.9)';
+  const guideColor = 'var(--border)';
   const thickness = 1;
   
   const style = orientation === 'horizontal'

@@ -422,7 +422,7 @@ const ColorControls: React.FC<ColorControlsProps> = ({
           <Square 
             className="h-4 w-4 absolute" 
             style={{ 
-              stroke: "hsl(var(--border))",
+              stroke: "var(--border)",
               fill: "transparent",
               strokeWidth: "1px"
             }} 
@@ -455,7 +455,7 @@ const ColorControls: React.FC<ColorControlsProps> = ({
       <Square 
         className="h-4 w-4" 
         style={{ 
-          stroke: "hsl(var(--border))",
+          stroke: "var(--border)",
           fill: `hsl(${hsl})`,
           strokeWidth: "1px"
         }} 
@@ -489,7 +489,7 @@ const ColorControls: React.FC<ColorControlsProps> = ({
                     style={{
                       background: `hsl(${hsl})`,
                       opacity: isDisabled ? 0.5 : 1,
-                      border: '1px solid hsl(var(--border))'
+                      border: '1px solid var(--border)'
                     }}
                   />
                 </ToggleGroupItem>
@@ -523,7 +523,7 @@ const ColorControls: React.FC<ColorControlsProps> = ({
                   >
                     {color.name === "none" ? (
                       <div className="relative w-4 h-4">
-                        <Square className="h-4 w-4 absolute" style={{ stroke: "hsl(var(--border))", fill: "transparent" }} />
+                        <Square className="h-4 w-4 absolute" style={{ stroke: "var(--border)", fill: "transparent" }} />
                         <Slash className="h-4 w-4 absolute text-muted-foreground" />
                       </div>
                     ) : (
@@ -531,7 +531,7 @@ const ColorControls: React.FC<ColorControlsProps> = ({
                         className="w-4 h-4 rounded-sm" 
                         style={{ 
                           background: `hsl(${color.hsl})`,
-                          border: '1px solid hsl(var(--border))'
+                          border: '1px solid var(--border)'
                         }}
                       />
                     )}
@@ -585,7 +585,7 @@ const ColorControls: React.FC<ColorControlsProps> = ({
                             <div 
                               className="w-4 h-4" 
                               style={{ 
-                                border: `${width}px solid ${selectedStrokeBase === 'none' ? 'hsl(var(--muted-foreground))' : `hsl(${getColorHsl(strokeColor)})`}`,
+                                border: `${width}px solid ${selectedStrokeBase === 'none' ? 'var(--muted-foreground)' : `hsl(${getColorHsl(strokeColor)})`}`,
                                 borderRadius: '2px',
                                 backgroundColor: 'transparent'
                               }}
@@ -611,7 +611,7 @@ const ColorControls: React.FC<ColorControlsProps> = ({
                           <div 
                             className="w-4 h-4" 
                             style={{ 
-                              border: `2px ${style.name} ${selectedStrokeBase === 'none' ? 'hsl(var(--muted-foreground))' : `hsl(${getColorHsl(strokeColor)})`}`,
+                              border: `2px ${style.name} ${selectedStrokeBase === 'none' ? 'var(--muted-foreground)' : `hsl(${getColorHsl(strokeColor)})`}`,
                               borderRadius: '2px',
                               backgroundColor: 'transparent'
                             }}
