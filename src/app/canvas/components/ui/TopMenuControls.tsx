@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, ChangeEvent } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, Presentation, PencilRuler, HelpCircle, Grip, Download, FileJson, Clipboard, Check, ArrowBigUpDash, FileUp, AlertTriangle, BookOpen, Copy, Moon, Sun } from 'lucide-react';
+import { Menu, Presentation, PencilRuler, HelpCircle, Grip, Download, FileJson, Clipboard, Check, ArrowBigUpDash, FileUp, AlertTriangle, BookOpen, Copy, Moon, Sun, Database, Save } from 'lucide-react';
 import { Node, Connection, useCanvasStore } from '../../lib/store/canvas-store';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { motion } from 'motion/react';
@@ -35,8 +35,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Input } from '@/components/ui/input';
 import ReactMarkdown from 'react-markdown';
 import { useTheme } from 'next-themes';
+import { createClient } from '@/lib/supabase/client';
+import type { Json } from '@/types/supabase';
 
 interface TopMenuControlsProps {
   position: 'left' | 'right';
@@ -63,6 +66,12 @@ const TopMenuControls = ({ position, presentationModeOnly = false }: TopMenuCont
   // Instructions states
   const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
   const [instructionsCopied, setInstructionsCopied] = useState(false);
+  
+  // Save to Supabase states
+  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+  const [saveTitle, setSaveTitle] = useState('');
+  const [saveDescription, setSaveDescription] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   
   const { presentationMode, togglePresentationMode } = useCanvasStore();
   const { resolvedTheme, setTheme } = useTheme();
@@ -267,6 +276,69 @@ const TopMenuControls = ({ position, presentationModeOnly = false }: TopMenuCont
   // Handle file upload button click
   const handleUploadClick = () => {
     fileInputRef.current?.click();
+  };
+
+  // Save to Supabase function
+  const saveToSupabase = async () => {
+    if (!saveTitle.trim()) {
+      toast.error("Title Required", {
+        description: "Please enter a title for your canvas save.",
+      });
+      return;
+    }
+
+    setIsSaving(true);
+    
+    try {
+      const supabase = createClient();
+      
+      // Get current user
+      // const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
+      // if (authError || !user) {
+      //   toast.error("Authentication Error", {
+      //     description: "Please sign in to save your canvas.",
+      //   });
+      //   return;
+      // }
+
+      const exportData = prepareExportData();
+      
+      const { error } = await supabase
+        .from('canvas_saves')
+        .insert({
+          // user_id: user.id,
+          title: saveTitle.trim(),
+          description: saveDescription.trim() || null,
+          canvas_data: JSON.parse(JSON.stringify(exportData)) as Json
+        });
+
+      if (error) {
+        console.error('Supabase error:', error);
+        toast.error("Save Failed", {
+          description: "There was an error saving your canvas to Supabase.",
+        });
+        return;
+      }
+
+      // Success
+      toast.success("Canvas Saved!", {
+        description: `"${saveTitle}" has been saved to Supabase.`,
+      });
+
+      // Reset form and close dialog
+      setSaveTitle('');
+      setSaveDescription('');
+      setIsSaveDialogOpen(false);
+
+    } catch (error) {
+      console.error('Save error:', error);
+      toast.error("Save Failed", {
+        description: "An unexpected error occurred while saving.",
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   // Instructions content from InstructionsComponent
@@ -675,6 +747,10 @@ Here's a simplified example of a complete import JSON with different types of no
                     <FileJson className="size-4" />
                     <span>View JSON</span>
                   </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setIsSaveDialogOpen(true)}>
+                    <Database className="size-4" />
+                    <span>Save to Supabase</span>
+                  </DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
             </DropdownMenuSub>
@@ -843,6 +919,68 @@ Here's a simplified example of a complete import JSON with different types of no
                 Close
               </Button>
             </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Save to Supabase Dialog */}
+      <Dialog open={isSaveDialogOpen} onOpenChange={setIsSaveDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Save Canvas to Supabase</DialogTitle>
+            <DialogDescription>
+              Save your current canvas state to Supabase for future access.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="save-title">Title *</Label>
+              <Input 
+                id="save-title"
+                placeholder="Enter a title for your canvas..."
+                value={saveTitle}
+                onChange={(e) => setSaveTitle(e.target.value)}
+              />
+            </div>
+            
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="save-description">Description</Label>
+              <Textarea 
+                id="save-description"
+                placeholder="Optional description..."
+                value={saveDescription}
+                onChange={(e) => setSaveDescription(e.target.value)}
+                rows={3}
+              />
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => setIsSaveDialogOpen(false)}
+              disabled={isSaving}
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={saveToSupabase}
+              disabled={!saveTitle.trim() || isSaving}
+              className="flex gap-2"
+            >
+              {isSaving ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4" />
+                  <span>Save Canvas</span>
+                </>
+              )}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
